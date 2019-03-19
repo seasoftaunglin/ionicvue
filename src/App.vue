@@ -23,8 +23,19 @@
 </template>
 
 <script>
+import store from '@/store'
 export default {
     name : 'App',
+    data() {
+        return {
+            currentUser : this.$store.state.currentUser
+        }
+    },
+    mounted(){
+        if(this.currentUser == null){
+            this.$router.push('login')
+        }
+    }
 }
 </script>
 

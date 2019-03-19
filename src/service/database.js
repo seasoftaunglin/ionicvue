@@ -9,12 +9,35 @@ var config = {
     storageBucket: "ionic-vue-imfucked.appspot.com",
     messagingSenderId: "1022177291332"
   };
+  
 const database =   firebase.initializeApp(config);
 database.signUp = async(email,password) => {
   try{
-    await firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email,password);
+    await firebase.auth().createUserWithEmailAndPassword(email,password);
     
     store.commit('setCurrentUser' , firebase.auth().currentUser);
+    return true;
+  }catch(error){
+    return error;
+  }
+}
+
+database.logIn = async(email,password) => {
+  try{
+    await firebase.auth().signInWithEmailAndPassword(email,password);
+    
+    store.commit('setCurrentUser' , firebase.auth().currentUser);
+    return true;
+  }catch(error){
+    return error;
+  }
+}
+
+database.signOut = async() => {
+  try{
+    await firebase.auth().signOut();
+    
+    store.commit('setCurrentUser' , null);
     return true;
   }catch(error){
     return error;
