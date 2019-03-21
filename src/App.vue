@@ -24,16 +24,28 @@
 
 <script>
 import store from '@/store'
+import axios from 'axios'
 export default {
     name : 'App',
     data() {
         return {
-            currentUser : this.$store.state.currentUser
+            currentUserToken : this.$store.state.currentUserToken.token,
         }
     },
-    mounted(){
-        if(this.currentUser == null){
+    created(){
+        if(this.currentUserToken == null || this.currentUserToken == undefined){
             this.$router.push('login')
+        }else{
+            axios({
+                method : 'post',
+                url : 'http://localhost:8000/api/details' , 
+                headers: {
+                        Authorization : 'Bearer ' + this.currentUserToken
+                    }
+                }).
+            then((response) => {
+                this.$store.commit('setCurrentUser' , response.data.success);
+            })
         }
     }
 }

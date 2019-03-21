@@ -10,7 +10,7 @@
           <ion-label>Shake</ion-label>
         </ion-item>
         <ion-item>
-          <ion-label>Current User - {{currentUser.email}}</ion-label>
+          <ion-label>Current User - {{user.name}}</ion-label>
         </ion-item>
         <ion-item>
           <ion-label>The Legend of Zelda</ion-label>
@@ -29,13 +29,30 @@
 </template>
 
 <script>
-import database from '@/service/database'
-
+import axios from 'axios'
 export default {
+  data(){
+    return {
+      user : '',
+      currentUserToken : this.$store.state.currentUserToken.token,
+    }
+  },
   methods : {
     signout() {
       database.signOut()
     }
+  },
+  created(){
+    axios({
+        method : 'post',
+        url : 'http://localhost:8000/api/details' , 
+        headers: {
+                Authorization : 'Bearer ' + this.currentUserToken
+            }
+        }).
+    then((response) => {
+        this.user = response.data.success
+    })
   },
   computed : {
     currentUser() {

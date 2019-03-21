@@ -6,9 +6,16 @@
                     <ion-title>Petcom </ion-title>
                 </ion-toolbar>
             </ion-header>
-            Email is {{email}}
             <form @submit.prevent="signUp">
                 <ion-grid>
+                    <ion-row>
+                        <ion-col>
+                            <ion-item>
+                                <ion-label position="floating">User Name</ion-label>
+                                <ion-input type='text' :value="username" @input="username = $event.target.value"></ion-input>
+                            </ion-item>
+                        </ion-col>
+                    </ion-row>
                     <ion-row>
                         <ion-col>
                             <ion-item>
@@ -40,11 +47,13 @@
 </template>
 
 <script>
-import database from '@/service/database'
+import store from '@/store'
+import axios from 'axios'
 export default {
     name: 'Signup',
     data() {
         return{
+            username : '',
             email : '',
             password : '',
             error: ''
@@ -52,13 +61,14 @@ export default {
     },
     methods: {
         async signUp(){
-            let result = await database.signUp(this.email , this.password)
-
-            if(result.message){
-                console.log(result.message)
-            }else {
-                console.log('User Created')
-            }
+            axios.post('http://localhost:8000/api/register' , {
+                'name' : this.username,
+                'email' : this.email,
+                'password' : this.password,
+                'c_password' : this.password
+            }).then((response) => {
+                   console.log(response);
+            });
         }
     }
 }

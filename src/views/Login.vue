@@ -6,7 +6,6 @@
                     <ion-title>Petcom </ion-title>
                 </ion-toolbar>
             </ion-header>
-            Email is {{email}}
             <form @submit.prevent="logIn">
                 <ion-grid>
                     <ion-row>
@@ -34,13 +33,14 @@
                         </ion-col>
                     </ion-row>
                 </ion-grid>
+                <button @click="gotohome()">Home Test</button>
             </form>
         </ion-page>
     </ion-app>
 </template>
 
 <script>
-import database from '@/service/database'
+import axios from 'axios'
 export default {
     name: 'logIn',
     data() {
@@ -51,15 +51,17 @@ export default {
         }
     },
     methods: {
-        async logIn(){
-            let result = await database.logIn(this.email , this.password)
-
-            if(result.message){
-                console.log(result.message)
-            }else {
-                console.log('User is logged in')
-                this.$router.push('home')
-            }
+        logIn(){
+            axios.post('http://localhost:8000/api/login' , {
+                'email' : this.email,
+                'password' : this.password
+            }).then((response) => {
+                   this.$store.commit('setCurrentUserToken' , response.data.success);
+                   this.$router.push('home');
+            });
+        },
+        gotohome(){
+            this.$router.push('home')
         }
     }
 }
