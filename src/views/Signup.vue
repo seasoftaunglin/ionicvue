@@ -51,6 +51,13 @@ import store from '@/store'
 import axios from 'axios'
 export default {
     name: 'Signup',
+    created(){
+        if(this.$session.exists()){
+            if(this.$session.has('token')){
+                this.$router.push('home')
+            }
+        }
+    },
     data() {
         return{
             username : '',
@@ -67,7 +74,7 @@ export default {
                 'password' : this.password,
                 'c_password' : this.password
             }).then((response) => {
-                   console.log(response);
+                   this.$router.push('login')
             });
         }
     }

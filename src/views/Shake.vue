@@ -33,30 +33,18 @@ import axios from 'axios'
 export default {
   data(){
     return {
-      user : '',
-      currentUserToken : this.$store.state.currentUserToken.token,
+      user : ''
     }
   },
   methods : {
     signout() {
-      database.signOut()
+      this.$session.destroy();
+      this.$router.push('/login');
     }
   },
   created(){
-    axios({
-        method : 'post',
-        url : 'http://localhost:8000/api/details' , 
-        headers: {
-                Authorization : 'Bearer ' + this.currentUserToken
-            }
-        }).
-    then((response) => {
-        this.user = response.data.success
-    })
-  },
-  computed : {
-    currentUser() {
-      return this.$store.state.currentUser
+    if(this.$session.exists()){
+      this.user = this.$session.get('currentUser')
     }
   }
 }

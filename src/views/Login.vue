@@ -33,7 +33,6 @@
                         </ion-col>
                     </ion-row>
                 </ion-grid>
-                <button @click="gotohome()">Home Test</button>
             </form>
         </ion-page>
     </ion-app>
@@ -43,6 +42,13 @@
 import axios from 'axios'
 export default {
     name: 'logIn',
+    created(){
+        if(this.$session.exists()){
+            if(this.$session.has('token')){
+                this.$router.push('home')
+            }
+        }
+    },
     data() {
         return{
             email : '',
@@ -56,13 +62,11 @@ export default {
                 'email' : this.email,
                 'password' : this.password
             }).then((response) => {
-                   this.$store.commit('setCurrentUserToken' , response.data.success);
+                   this.$session.start();
+                   this.$session.set('token' , response.data.success);
                    this.$router.push('home');
             });
         },
-        gotohome(){
-            this.$router.push('home')
-        }
     }
 }
 </script>

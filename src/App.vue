@@ -29,23 +29,27 @@ export default {
     name : 'App',
     data() {
         return {
-            currentUserToken : this.$store.state.currentUserToken.token,
+            currentUserToken : this.$session.get('token')
         }
     },
-    created(){
-        if(this.currentUserToken == null || this.currentUserToken == undefined){
+    mounted(){
+        if(!this.$session.exists()){
             this.$router.push('login')
         }else{
-            axios({
-                method : 'post',
-                url : 'http://localhost:8000/api/details' , 
-                headers: {
-                        Authorization : 'Bearer ' + this.currentUserToken
-                    }
-                }).
-            then((response) => {
-                this.$store.commit('setCurrentUser' , response.data.success);
-            })
+            if(this.$session.has('token')){
+                axios({
+                    method : 'post',
+                    url : 'http://localhost:8000/api/details' , 
+                    headers: {
+                            Authorization : 'Bearer ' + this.currentUserToken.token
+                        }
+                    }).
+                then((response) => {
+                    this.$session.set('currentUser' , response.data.success);
+                })
+            }else{
+                this.$router.push('login')
+            }
         }
     }
 }

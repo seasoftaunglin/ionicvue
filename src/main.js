@@ -4,15 +4,15 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Ionic from '@ionic/vue'
-import store from '@/store'
+import VueSession from 'vue-session'
 
 Vue.use(Ionic)
+Vue.use(VueSession)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  store,
   router,
   components: { App },
   template: '<ion-app><router-view></router-view></ion-app>'
